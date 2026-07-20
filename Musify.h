@@ -1,12 +1,12 @@
 #include<string>
 #include<vector>
 #include<cstdlib>
+#include<stdexcept>
 #include<unistd.h>
 
 // Musify Class
 class Musify {
 private:
-    // Struct Song
     struct Song {
         std::string songName;
         Song* next;
@@ -27,7 +27,8 @@ public:
         Song* head=nullptr;
         for(Song* start:playlists)
             if(start->songName==firstSong) { head=start; break; }
-        if(head) {
+        if(!head) throw std::runtime_error("Playlist Not Found!");
+        else {
             std::string command="mpv --no-video \"songs/" + head->songName + "\" &";
             system(command.c_str());
         }
