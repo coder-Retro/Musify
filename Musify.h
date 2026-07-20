@@ -8,27 +8,27 @@ class Musify {
 private:
     // Struct Song
     struct Song {
-        string songName;
+        std::string songName;
         Song* next;
-        Song(string songName): songName(songName), next(nullptr) {}
+        Song(std::string songName): songName(songName), next(nullptr) {}
     };
-    vector<Song*> playlists;
+    std::vector<Song*> playlists;
 public:
-    void makePlayList(initializer_list<string> songs) {
+    void makePlayList(std::initializer_list<std::string> songs) {
         Song dummy("-");
         Song* runner=&dummy;
-        for(string song:songs) {
+        for(std::string song:songs) {
             runner->next=new Song(song);
             runner=runner->next;
         }
         playlists.push_back(dummy.next);
     }
-    void play(const string& firstSong) {
+    void play(const std::string& firstSong) {
         Song* head=nullptr;
         for(Song* start:playlists)
             if(start->songName==firstSong) { head=start; break; }
         if(head) {
-            string command="mpv --no-video \"songs/" + head->songName + "\" &";
+            std::string command="mpv --no-video \"songs/" + head->songName + "\" &";
             system(command.c_str());
         }
     }
