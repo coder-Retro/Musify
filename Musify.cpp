@@ -17,13 +17,14 @@ private:
 
 public:
     void play(const string& song) {
-        string com="mpv --no-video \"" + song + "\" &";
+        string com="mpv --no-video \"songs/" + song + "\" &";
         system(com.c_str());
     }
 };
 
 // Main Function
 int main() {
-    play("song1.mp3");
+    Musify* list=new Musify();
+    list->play("song1.mp3");
     return 0;
 }
