@@ -5,8 +5,8 @@ using namespace std;
 // Main Function
 int main() {
     Musify m;
-    m.makePlayList({"song1.mp3"});
-    string firstSong="song1.mp3";
-    m.play(firstSong);
+    string listName="List1";
+    m.makePlayList("List1",{"song1.mp3"});
+    m.play(listName);
     return 0;
 }

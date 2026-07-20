@@ -13,31 +13,31 @@ private:
         Song* next;
         Song(std::string songName): songName(songName), next(nullptr) {}
     };
-    std::vector<Song*> playlists;
+    std::vector<std::pair<std::string,Song*>> playlists;
 public:
-    void makePlayList(std::initializer_list<std::string> songs) {
+    void makePlayList(const std::string& listName,std::initializer_list<std::string> songs) {
         Song dummy("-");
         Song* runner=&dummy;
         for(std::string song:songs) {
             runner->next=new Song(song);
             runner=runner->next;
         }
-        playlists.push_back(dummy.next);
+        playlists.push_back({listName,dummy.next});
     }
-    void play(const std::string& firstSong) {
+    void play(const std::string& listName) {
         Song* head=nullptr;
-        for(Song* start:playlists)
-            if(start->songName==firstSong) { head=start; break; }
+        for(std::pair<std::string,Song*> playlist:playlists)
+            if(playlist.first==listName) { head=playlist.second; break; }
         if(!head) throw std::runtime_error("Playlist Not Found!");
         else {
-            std::string command="mpv --no-video \"songs/" + head->songName + "\" &";
+            std::string command="mpv --no-video \"songs/"+listName+"/"+head->songName+"\" &";
             system(command.c_str());
         }
     }
     void stop() { system("killall mpv"); }
     ~Musify() {
         while(!playlists.empty()) {
-            Song* current=playlists.back();
+            Song* current=playlists.back().second;
             while(current) {
                 Song* target=current;
                 current=current->next;
