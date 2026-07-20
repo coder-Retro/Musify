@@ -1,30 +1,58 @@
 #include<iostream>
 #include<string>
+#include<vector>
 #include<cstdlib>
 #include<unistd.h>
 using namespace std;
 
-// Struct Song
-struct Song {
-    string songName;
-    Song* next;
-    Song(string songName): songName(songName), next(nullptr) {}
-};
-
 // Musify Class
 class Musify {
 private:
-
+    // Struct Song
+    struct Song {
+        string songName;
+        Song* next;
+        Song(string songName): songName(songName), next(nullptr) {}
+    };
+    vector<Song*> playlists;
 public:
-    void play(const string& song) {
-        string com="mpv --no-video \"songs/" + song + "\" &";
-        system(com.c_str());
+    void makePlayList(initializer_list<string> songs) {
+        Song dummy("-");
+        Song* runner=&dummy;
+        for(string song:songs) {
+            runner->next=new Song(song);
+            runner=runner->next;
+        }
+        playlists.push_back(dummy.next);
+    }
+    void play(const string& firstSong) {
+        Song* head=nullptr;
+        for(Song* start:playlists)
+            if(start->songName==firstSong) { head=start; break; }
+        if(head) {
+            string command="mpv --no-video \"songs/" + head->songName + "\" &";
+            system(command.c_str());
+        }
+    }
+    void stop() { system("killall mpv"); }
+    ~Musify() {
+        while(!playlists.empty()) {
+            Song* current=playlists.back();
+            while(current) {
+                Song* target=current;
+                current=current->next;
+                delete target;
+            }
+            playlists.pop_back();
+        }
     }
 };
 
 // Main Function
 int main() {
-    Musify* list=new Musify();
-    list->play("song1.mp3");
+    Musify m;
+    m.makePlayList({"song1.mp3"});
+    string firstSong="song1.mp3";
+    m.play(firstSong);
     return 0;
 }
