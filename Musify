@@ -1,9 +1,7 @@
-#include<iostream>
 #include<string>
 #include<vector>
 #include<cstdlib>
 #include<unistd.h>
-using namespace std;
 
 // Musify Class
 class Musify {
@@ -47,12 +45,3 @@ public:
         }
     }
 };
-
-// Main Function
-int main() {
-    Musify m;
-    m.makePlayList({"song1.mp3"});
-    string firstSong="song1.mp3";
-    m.play(firstSong);
-    return 0;
-}
